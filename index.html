@@ -1,88 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
     <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
   />
 
 </head>
+
 <body>
     <div id="app">
-        <input type="text" v-model="name" placeholder="Name">
-        <input type="text" v-model="price" placeholder="Price">
-        <button @click="addProduct()">Save</button>
-       <ul>
-           <li v-for="(p, index) in products" class="animate__animated" :class="animate__bounceInLeft = deleted">
-                
-               {{p.name}} - {{p.price}}
-               <button @click="editProduct(p, index)">edit</button>
-               <button @click="delProduct(index)">del</button>
-               
-           </li>
-       </ul>
+        <div class="container">
+            <h1>Add Product</h1>
+            <input type="text" v-model="name" placeholder="Name">
+            <input type="text" v-model="price" placeholder="Price">
+            <button @click="addProduct()" class="btn waves-effect waves-light">Save</button>
+                <transition-group name="alert-in" enter-active-class="animate__backInLeft" leave-active-class="animate__bounceOut" tag="ul">
+                    <li v-for="(p, index) in products" :key="p.name" class="animate__animated">
+                        {{p.name}} - {{p.price}}
+                        <button class="btn blue darken-4" @click="editProduct(p, index)">edit</button>
+                        <button class="btn red lighten-1" @click="delProduct(index)">del</button>
+                    </li>
+                </transition-group>
+        </div>
+
     </div>
 </body>
+
 </html>
 <script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            name: '',
+            price: '',
+            products: [{
+                id:1,
+                name: 'waiwai',
+                price: '2000'
+            }],
+            edit: false,
+            index: '',
+            add : true,
+            remove: 0,
+        },
 
-var app = new Vue({
-  el: '#app',
-  data: {
-    name:'',
-    price:'',
-    products:[{name:'waiwai',price:'2000'}],
-    edit: false,
-    index:'',
-    deleted: '',
-  },
+        methods: {
+            addProduct() {
+                if (this.edit == false) {
+                    var newProduct = {
+                        id: this.id = this.id+1,
+                        name: this.name,
+                        price: this.price
+                    };
 
-  methods:{
-      addProduct(){
-            if(this.edit == false){
-                var newProduct = {
-                    name: this.name,
-                    price: this.price
-                 };
+                    this.products.push(newProduct);
 
-                this.products.push(newProduct);
+                } else {
+                    var updatedProduct = {
+                        name: this.name,
+                        price: this.price
+                    }
 
-           
+                    this.$set(this.products, this.index, updatedProduct)
+                    this.edit = false
 
-            } else {
-                var updatedProduct = {
-                    name: this.name,
-                    price: this.price
                 }
 
-                this.$set(this.products, this.index, updatedProduct)
+                this.name = ""
+                this.price = ""
 
-                this.edit = false
+            },
 
+            editProduct(p, index) {
+                this.name = p.name
+                this.price = p.price
+                this.index = index
+                this.edit = true
+            },
+
+            delProduct(index, id) {
+               this.products.splice(index, 1)
             }
-            
-            
-            this.name = ""
-            this.price = ""
-          
-      },
 
-      editProduct(p, index){
-          this.name = p.name
-          this.price = p.price
-          this.index = index
-          this.edit = true
-      },
-
-      delProduct(index){
-          this.products.splice(index, 1)
-          this.deleted = index
-      }
-
-  }
-})
+        }
+    })
 </script>
