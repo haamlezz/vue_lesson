@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
+  />
+
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="name" placeholder="Name">
+        <input type="text" v-model="price" placeholder="Price">
+        <button @click="addProduct()">Save</button>
+       <ul>
+           <li v-for="(p, index) in products" class="animate__animated" :class="animate__bounceInLeft = deleted">
+                
+               {{p.name}} - {{p.price}}
+               <button @click="editProduct(p, index)">edit</button>
+               <button @click="delProduct(index)">del</button>
+               
+           </li>
+       </ul>
+    </div>
+</body>
+</html>
+<script>
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    name:'',
+    price:'',
+    products:[{name:'waiwai',price:'2000'}],
+    edit: false,
+    index:'',
+    deleted: '',
+  },
+
+  methods:{
+      addProduct(){
+            if(this.edit == false){
+                var newProduct = {
+                    name: this.name,
+                    price: this.price
+                 };
+
+                this.products.push(newProduct);
+
+           
+
+            } else {
+                var updatedProduct = {
+                    name: this.name,
+                    price: this.price
+                }
+
+                this.$set(this.products, this.index, updatedProduct)
+
+                this.edit = false
+
+            }
+            
+            
+            this.name = ""
+            this.price = ""
+          
+      },
+
+      editProduct(p, index){
+          this.name = p.name
+          this.price = p.price
+          this.index = index
+          this.edit = true
+      },
+
+      delProduct(index){
+          this.products.splice(index, 1)
+          this.deleted = index
+      }
+
+  }
+})
+</script>
