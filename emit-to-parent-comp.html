@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        Cart: ( {{ cart }} )
+        <product @add-to-cart="updateCart"></product>
+        <product @add-to-cart="updateCart"></product>
+    </div>
+</body>
+</html>
+<script>
+
+
+
+
+    Vue.component('product', {
+        //ກຳນົດ props ໃຫ້ກັບສິນຄ້າ
+        props: {
+            //ຊື່ສິນຄ້າ
+            name: {
+                type: String, //ຊະນິດ
+                required: true, //ກຳນົດວ່າຕ້ອງມີ ຫຼື ບໍ່
+                default: "Product Name" //ຂໍ້ມູນເລີ່ມຕົ້ນ
+            },
+
+            //ລາຄາສິນຄ້າ
+            price: {
+                type: Number, //ຊະນິດ
+                require: true, //ກຳນົດວ່າຕ້ອງມີ ຫຼື ບໍ່
+                default: 0 //ຂໍ້ມູນເລີ່ມຕົ້ນ
+            }
+        },
+
+        //ກຳນົດ template ໃຫ້ກັບຄອມໂພເນັ້ນ
+        template: 
+        `<div>
+            <h2>{{ name }}</h2>
+            <p>Price: {{ price }}</p>
+            
+            <!-- ປຸ່ມເພີ່ມສິນຄ້າຈະເຮັດວຽກເມື່ອຖືກກົດ -->
+            <button @click="$emit('add-to-cart')">Add to cart</button>
+        </div>` ,
+        
+    })
+
+    new Vue({
+        el: '#app',
+        data: {
+            cart: 0,
+        },
+        methods:{
+            updateCart(){
+                this.cart+=1
+            }
+        }
+    })
+</script>

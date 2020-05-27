@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
+
 
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -14,6 +14,7 @@
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
+    <!-- css Animate -->
     <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
@@ -24,10 +25,10 @@
 <body>
     <div id="app">
         <div class="container">
-            <h1>Add Product</h1>
+            <h1>add product</h1>
             <input type="text" v-model="name" placeholder="Name">
             <input type="text" v-model="price" placeholder="Price">
-            <button @click="addProduct()" class="btn waves-effect waves-light">Save</button>
+            <button @click="addProduct()" class="btn">Save</button>
                 <transition-group name="alert-in" enter-active-class="animate__backInLeft" leave-active-class="animate__bounceOut" tag="ul">
                     <li v-for="(p, index) in products" :key="p.name" class="animate__animated">
                         {{p.name}} - {{p.price}}
@@ -35,9 +36,9 @@
                         <button class="btn red lighten-1" @click="delProduct(index)">del</button>
                     </li>
                 </transition-group>
-        </div>
+        </div><!-- .container -->
 
-    </div>
+    </div><!-- #app -->
 </body>
 
 </html>
