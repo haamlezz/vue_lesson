@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+
+    <div id="app">
+       
+        <h1>My Shopping Cart</h1>
+        
+        <!--loop ລາຍການສິນຄ້າ ໂດຍໃຊ້ຄອມໂພເນັ້ນ Product-->
+        <div v-for="p in products">
+            <Product :name="p.name" :price="p.price" @add-to-cart="updateCart(p)"/>
+        </div>
+        
+        <hr>
+
+        <h3>Cart ( {{cart.length}} )</h3>
+        <!--loop ກະຕ່າສິນຄ້າ ໂດຍໃຊ້ຄອມໂພເນັ້ນ Cart-->
+        <div v-for="c in cart">
+            <Cart :product="c.product" :qty="c.qty" :amount="c.qty * c.price"/>
+        </div>
+        <div v-if="subtotal != 0">
+            <hr>
+
+            <h4>Total: {{ subtotal }} </h4>
+        </div>
+
+    </div>
+    
+</body>
+</html>
+
+<script>
+
+    //Cart Component
+    /*
+        props ທີ່ມີຢູ່ໃນນີ້ແມ່ນປະກອບດ້ວຍ ສິນຄ້າ(product), ຈຳນວນ(qty), ມູນຄ່າລວມຂອງແຕ່ລະລາຍການ(amount)
+    */
+    Vue.component('Cart',{
+        props:['product', 'qty', 'amount'],
+        template: `
+            <div>
+                {{ product }} - {{ qty }} : {{ amount }}
+            </div>
+        `
+    })
+
+    //Product Component
+    /*
+        props ທີ່ມີຢູ່ໃນນີ້ແມ່ນປະກອບດ້ວຍ ຊື່ສິນຄ້າ(name), ລາຄາ(price)
+        data ມີພຽງແຕ່ ຈຳນວນທີ່ຖືກສັ່ງ(qty) ເຊິ່ງຈະຖືກເພີ່ມຂຶ້ນເທື່ອລະ 1 ເພື່ອຖືກກົດ
+            ນອກນັ້ນຍັງ emit ຄ່າ add-to-cart ອອກມາພ້ອມ ເພື່ອໃຫ້ຄອມໂພເນັ້ນຫຼັກໄດ້ຮັບຕູ້
+    */
+    Vue.component('Product', {
+        props: ['name', 'price'],
+        template: `
+            <div>
+                <h3>{{ name }}</h3>
+                <p>Price: {{ price }} kip</p>
+                <button @click="$emit('add-to-cart'),qty+=1">Add to cart ( {{ qty}} )</button>
+            </div>
+        `,
+        data(){
+            return{
+                qty:0
+            }
+        },
+        
+    })
+
+    new Vue({
+        el: "#app",
+        data: {
+            //ເອົາໄວ້ເກັບລາຍການໃນກະຕ່າສິນຄ້າ
+            cart: [],
+
+            //ລາຍການສິນຄ້າ
+            products: [
+                {name: 'Oishi', price: 6000},
+                {name: 'Sting', price: 5000}
+            ],
+
+            //ລາຄາລວມທັງໝົດ
+            subtotal: 0
+        },
+        methods:{
+            //ຟັງຊັ້ນປັບປຸງລາຍການກະຕ່າ ຖ້າຫາກກົດໃສ່ປຸ່ມ Add to cart
+            updateCart(p){
+
+                //ກວດວ່າມີສິນຄ້ານັ້ນຢູ່ຫຼືບໍ່ ໂດຍໃຊ້ຟັງຊັ້ນ checkCart(ກຳນົດຊື່ສິນຄ້າ)
+                if (this.checkCart(p.name)) {
+                    //ຖ້າມີສິນຄ້າຢູ່ແລ້ວໃຫ້ເພີ່ມຈຳນວນ
+                    console.log('updated')
+                } else {
+                    //ຖ້າບໍ່ມີໃຫ້ເພີ່ມໃສ່ໃໝ່
+                    console.log('inserted')
+
+                    //
+                    let newList = {product:p.name, qty:1, price:p.price}
+                    this.cart.push(newList)
+                }
+                this. getTotal()
+            },
+
+
+            //ຟັງຊັ້ນ ກວດສອບລາຍການສິນຄ້າໃນກະຕ່າ ຖ້າມີ return true ຖ້າບໍ່ມີ return false
+            checkCart(name){
+                var i;
+                for(i = 0; i < this.cart.length; i++) {
+                    var c = this.cart[i]
+                    if(c.product === name){
+                        c.qty += 1
+                        return true
+                    }
+                }
+
+                return false
+            },
+
+
+            //ຟັງຊັ້ນ ຄຳນວນຫາລາຄາລວມທັງໝົດ 
+            getTotal(){
+                var i;
+                var amount = 0;
+                var total = 0;
+                for(i = 0; i < this.cart.length; i++) {
+                    var c = this.cart[i]
+                    amount = c.qty * c.price
+                    total = total + amount
+                }
+                this.subtotal = total
+            }
+        }
+    })
+</script>
